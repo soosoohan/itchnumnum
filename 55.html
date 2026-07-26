@@ -95,11 +95,37 @@ body {
   }
   #pc-hint { margin-top: 12px; font-size: 0.8rem; color: #666; text-align: center; line-height: 1.6; }
 
-  #ranking-area { margin-top: 24px; width: 100%; max-width: 320px; 
-    max-height: 240px;     
-    overflow-y: auto;       
-  }
-  #ranking-area h3 { color: #f0c040; font-size: 1rem; margin-bottom: 10px; text-align: center; }
+  #ranking-area {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  z-index: 300;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+#ranking-area.show { display: flex; }
+#ranking-box {
+  background: #1a1a2e;
+  border-radius: 16px;
+  padding: 20px;
+  width: 100%;
+  max-width: 320px;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+}
+#ranking-box h3 { color: #f0c040; font-size: 1rem; margin-bottom: 10px; text-align: center; }
+#ranking-close {
+  position: absolute; top: 10px; right: 14px;
+  background: none; border: none; color: #888;
+  font-size: 1.4rem; cursor: pointer;
+}
+#ranking-note {
+  margin-top: 14px; font-size: 0.75rem; color: #888;
+  line-height: 1.5; text-align: center;
+}
   .rank-row {
     display: flex; align-items: center; gap: 8px;
     padding: 6px 10px; border-radius: 8px;
@@ -199,9 +225,17 @@ body {
 <div id="pc-hint">← → Select Column · Enter / Space Drop</div>
 <button id="ranking-btn" style="margin-top:14px; padding:10px 28px; border-radius:10px; border:none; background:#2a2a4a; color:#f0c040; font-size:0.95rem; cursor:pointer;">🏆 Leaderboard</button>
 
-<div id="ranking-area" style="display:none;">
-  <h3>🏆 Top 10 · NumNum 5×5 (this device)</h3>
-  <div id="ranking-list"></div>
+<div id="ranking-area">
+  <div id="ranking-box">
+    <button id="ranking-close">✕</button>
+    <h3>🏆 Top 10 · NumNum 4×4 (this device)</h3>
+    <div id="ranking-list"></div>
+    <p id="ranking-note">
+  * Scores are saved locally on this device only.<br>
+  We're working on improving this —<br>
+  let us know your ideas in the comments!
+</p>
+  </div>
 </div>
 
 <div id="overlay">
@@ -571,15 +605,14 @@ document.getElementById('save-score-btn').addEventListener('click', function() {
 
 document.getElementById('ranking-btn').addEventListener('click', function() {
   const area = document.getElementById('ranking-area');
-  if (area.style.display === 'block') {
-    area.style.display = 'none';
-    this.textContent = '🏆 Leaderboard';
-    return;
-  }
   loadRanking();
-  area.style.display = 'block';
-  this.textContent = '🏆 Close Leaderboard';
-  area.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  area.classList.add('show');
+});
+document.getElementById('ranking-close').addEventListener('click', function() {
+  document.getElementById('ranking-area').classList.remove('show');
+});
+document.getElementById('ranking-area').addEventListener('click', function(e) {
+  if (e.target === this) this.classList.remove('show'); // 배경 클릭 시 닫기
 });
 </script>
 </body>
