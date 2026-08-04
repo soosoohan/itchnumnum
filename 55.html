@@ -558,13 +558,13 @@ function setLocalBoard(list) {
 }
 function saveAndShowRank() {
   const list = getLocalBoard();
-  const entry = { id: playerId, score: score, ts: Date.now() };
-  list.push(entry);
+  const newEntry = { id: playerId, score: score, ts: Date.now() };
+  list.push(newEntry);
   list.sort((a,b) => b.score - a.score);
   const trimmed = list.slice(0, 10);
   setLocalBoard(trimmed);
-  const rank = trimmed.findIndex(e => e.ts === entry.ts) + 1;
-  return rank > 0 ? rank : list.length;
+  const rank = trimmed.findIndex(e => e.ts === newEntry.ts) + 1;
+  return rank > 0 ? rank : trimmed.length + 1; 
 }
 function loadRanking() {
   const list = getLocalBoard();
