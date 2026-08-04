@@ -289,7 +289,7 @@ if (!playerId) { playerId = genId(); localStorage.setItem('numnum-id', playerId)
 document.getElementById('player-id').textContent = playerId;
 
 let board, queue, selectedCol, score, gameOver;
-let isMobile = window.innerWidth <= 680 || 'ontouchstart' in window;
+let isMobile = window.innerWidth <= 600 || 'ontouchstart' in window;
 
 function startGame() {
   document.getElementById('start-screen').style.display = 'none';
