@@ -347,7 +347,13 @@ function buildColButtons() {
 }
 
 function highlightCol() {
-  document.querySelectorAll('.col-btn').forEach((btn,i) => btn.classList.toggle('selected', i===selectedCol));
+  document.querySelectorAll('.col-btn').forEach((btn, i) => {
+    if (isMobile) {
+      btn.classList.remove('selected');   
+    } else {
+      btn.classList.toggle('selected', i === selectedCol);  
+    }
+  });
 }
 
 function renderBoard(mergeSet) {
@@ -581,13 +587,17 @@ function fireConfetti() {
 }
 
 document.addEventListener('keydown', e => {
+  if (['ArrowLeft','ArrowRight','Enter',' '].includes(e.key) && isMobile) {
+    isMobile = false;
+    document.getElementById('pc-hint').style.display = 'block';
+    highlightCol();  
+  }
+  
   if (gameOver) return;
-  if (e.key==='ArrowLeft')  { e.preventDefault(); selectedCol=Math.max(0,selectedCol-1); highlightCol(); }
-  if (e.key==='ArrowRight') { e.preventDefault(); selectedCol=Math.min(COLS-1,selectedCol+1); highlightCol(); }
-  if (e.key==='Enter'||e.key===' ') { e.preventDefault(); dropCard(); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); selectedCol = Math.max(0, selectedCol-1); highlightCol(); }
+  if (e.key === 'ArrowRight') { e.preventDefault(); selectedCol = Math.min(COLS-1, selectedCol+1); highlightCol(); }
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); dropCard(); }
 });
-
-document.getElementById('drop-btn').addEventListener('click', dropCard);
 document.getElementById('restart-btn').addEventListener('click', init);
 
 document.getElementById('save-score-btn').addEventListener('click', function() {
